@@ -44,7 +44,7 @@ class PigRenameStates(StatesGroup):
 
 async def save_pigs():
     with open(pigs_file, "w", encoding="utf-8") as file:
-        pigs_data = {user_id: pig.to_dict() for user_id, pig in pigs.items()}
+        pigs_data = {str(user_id): pig.to_dict() for user_id, pig in pigs.items()}  # Преобразование идентификаторов в строки
         json.dump(pigs_data, file, ensure_ascii=False)
 
 
@@ -53,7 +53,7 @@ async def load_pigs():
     try:
         with open(pigs_file, "r", encoding="utf-8") as file:
             pigs_data = json.load(file)
-            pigs = {user_id: Pig.from_dict(data) for user_id, data in pigs_data.items()}
+            pigs = {int(user_id): Pig.from_dict(data) for user_id, data in pigs_data.items()}  # Преобразование идентификаторов в целые числа
     except FileNotFoundError:
         pigs = {}
 
@@ -69,7 +69,7 @@ async def rename_pig(user_id, message):
 
 @dp.message_handler(state=PigRenameStates.enter_new_name)  # Обработчик для ввода нового имени хряка
 async def enter_new_name_handler(message: types.Message, state: FSMContext):
-    user_id = message.chat.id
+    user_id = message.from_id
 
     pig_name = message.text  # Получаем введенное новое имя хряка
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
@@ -84,7 +84,7 @@ async def enter_new_name_handler(message: types.Message, state: FSMContext):
 
 @dp.message_handler(commands=["rename"], state="*")
 async def rename(message: types.Message, state: FSMContext):
-    user_id = message.chat.id
+    user_id = message.from_id
 
     if user_id in pigs:
         await rename_pig(user_id, message)
@@ -94,17 +94,18 @@ async def rename(message: types.Message, state: FSMContext):
 
 @dp.message_handler(commands=["start"])
 async def start_handler(message: types.Message):
-    user_id = message.chat.id
+    user_id = message.from_id  # Получаем идентификатор пользователя, отправившего команду
 
-    if user_id not in pigs:
+    if user_id in pigs:
+        await message.reply("У вас уже есть хряк.")
+    else:
         pigs[user_id] = Pig(name=None, weight=100)
-
-    await message.reply("Бот был успешно настроен.")
+        await message.reply("Бот был успешно настроен.")
 
 
 @dp.message_handler(commands=["weight"])
 async def weight_handler(message: types.Message):
-    user_id = message.chat.id
+    user_id = message.from_id
 
     if user_id in pigs:
         pig = pigs[user_id]
@@ -115,7 +116,7 @@ async def weight_handler(message: types.Message):
 
 @dp.message_handler(commands=["grow"])
 async def grow(message: types.Message):
-    user_id = message.chat.id
+    user_id = message.from_id
 
     if user_id in pigs:
         pig = pigs[user_id]  # Получаем хряка для данного пользователя
@@ -130,7 +131,8 @@ async def grow(message: types.Message):
             if time_difference.days >= 1:  # Проверяем, прошел ли хотя бы 1 день с последнего обновления
                 await modify_weight(user_id, message)
             else:
-                await bot.send_message(chat_id=user_id, text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня.")
+                await bot.send_message(chat_id=user_id,
+                                       text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня.")
     else:
         await bot.send_message(chat_id=user_id,
                                text=f"@{message.from_user.username}, у вас нет хряка. Начните с комкоманды /start")
