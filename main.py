@@ -75,7 +75,7 @@ async def start_handler(message: types.Message):
         pigs[user_id] = Pig(name=None, weight=100, chat_id=chat_id)  # Передаем идентификатор чата при создании хряка
         await message.reply("Бот был успешно настроен.")
 
-    await save_pigs()  # Сохраняем хряков
+    save_pigs()  # Сохраняем хряков
 
 
 @dp.message_handler(commands=["weight"])
