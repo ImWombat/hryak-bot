@@ -29,19 +29,21 @@ def load_pigs():
 async def modify_weight(user_id, message):
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
 
-    random_number = random.randint(0, 1)  # Генерируем случайное число (0 или 1)
+    random_number = random.randint(0, 2)  # Генерируем случайное число (0 или 1)
 
-    if random_number == 0:
+    if random_number == 1:
         weight_change = random.randint(1, 25)  # Генерируем случайное число для изменения веса (от 1 до 10)
         pig.weight += weight_change
         message_text = f"@{message.from_user.username}, ваш хряк потолстел на {weight_change} кг."
-    else:
+    elif random_number == 2:
         weight_change = random.randint(1, 10)  # Генерируем случайное число для изменения веса (от 1 до 10)
         pig.weight -= weight_change
         message_text = f"@{message.from_user.username}, ваш хряк похудел на {weight_change} кг."
         if pig.weight <= 15:
             pigs.pop(user_id)
             message_text = f"@{message.from_user.username}, ваш хряк умер от недоедания."
+    else:
+        message_text = f"@{message.from_user.username}, ваш хряк не изменился в весе."
     pig.last_updated = datetime.datetime.now().strftime("%Y-%m-%d")  # Обновляем дату последнего обновления
 
     save_pigs()  # Сохраняем хряков
