@@ -109,7 +109,7 @@ async def weight_handler(message: types.Message):
 async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
     top_message = "Топ хряков по весу:\n\n"
-    for index, pig in enumerate(sorted_pigs, start=1):
+    for index, pig in enumerate(sorted_pigs[:15], start=1):
         top_message += f"{index}. {pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
     await message.reply(top_message)
 
