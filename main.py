@@ -61,7 +61,7 @@ async def grow(message: types.Message):
             else:
                 await message.reply(text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня.")
     else:
-        await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с комкоманды /start")
+        await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
 
 @dp.message_handler(commands=["start"])
