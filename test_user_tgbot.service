@@ -1,0 +1,14 @@
+
+[Unit]
+Description=Telegram Bot
+After=network.target
+
+[Service]
+User=danil
+Group=danil
+WorkingDirectory=/home/danil/hryak-bot/
+Environment="PYTHONPATH=/home/danil/hryak-bot/"
+ExecStart=/home/danil/hryak-bot/.venv/bin/python /home/danil/hryak-bot/main.py
+
+[Install]
+WantedBy=multi-user.target
