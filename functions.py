@@ -32,15 +32,15 @@ async def modify_weight(user_id, message):
     random_number = random.randint(0, 1)  # Генерируем случайное число (0 или 1)
 
     weight_change = random.randint(-10, 25)  # Генерируем случайное число для изменения веса (от 1 до 10)
-    if weight_change >= 0:
+    if weight_change > 0:
 
         pig.weight += weight_change
-        message_text = f"@{message.from_user.username}, ваш хряк потолстел на {weight_change} кг."
+        message_text = f"@{message.from_user.username}, ваш хряк потолстел на {weight_change} кг. Теперь он весит {pig.weight}"
     elif weight_change == 0:
-        message_text = f"@{message.from_user.username}, ваш хряк не изменился в весе"
+        message_text = f"@{message.from_user.username}, ваш хряк не изменился в весе. Теперь он весит {pig.weight}"
     else:
         pig.weight += weight_change
-        message_text = f"@{message.from_user.username}, ваш хряк похудел на {weight_change} кг."
+        message_text = f"@{message.from_user.username}, ваш хряк похудел на {- weight_change} кг. Теперь он весит {pig.weight}"
         if pig.weight <= 15:
             pigs.pop(user_id)
             message_text = f"@{message.from_user.username}, ваш хряк умер от недоедания."

@@ -61,7 +61,7 @@ async def grow(message: types.Message):
             else:
                 await message.reply(text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня.")
     else:
-        await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с комкоманды /start")
+        await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
 
 @dp.message_handler(commands=["start"])
@@ -91,12 +91,14 @@ async def weight_handler(message: types.Message):
             image_path = "images/image_2.jpg"
         elif 100 < pig.weight <= 150:
             image_path = "images/image_3.jpg"
-        elif 150 < pig.weight <= 250:
+        elif 150< pig.weight <= 200:
+            image_path = 'images/image_5.jpg'
+        elif 200 < pig.weight <= 250:
             image_path = 'images/image_4.jpg'
         elif 250 < pig.weight <= 500:
-            image_path = 'images/image_5.jpg'
-        else:
             image_path = 'images/image_6.jpg'
+        else:
+            image_path = 'images/image_7.jpg'
 
         with open(image_path, "rb") as photo:
             await message.reply_photo(photo=photo,
@@ -108,8 +110,8 @@ async def weight_handler(message: types.Message):
 @dp.message_handler(commands=["top"])
 async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
-    top_message = "Топ хряков по весу:\n\n"
-    for index, pig in enumerate(sorted_pigs[:15], start=1):
+    top_message = "Топ 20 хряков по весу:\n\n"
+    for index, pig in enumerate(sorted_pigs[:20], start=1):
         top_message += f"{index}. {pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
     await message.reply(top_message)
 
