@@ -59,7 +59,8 @@ async def grow(message: types.Message):
             if time_difference.days >= 1:  # Проверяем, прошел ли хотя бы 1 день с последнего обновления
                 await modify_weight(user_id, message)
             else:
-                await message.reply(text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня.")
+                await message.reply(text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня. "
+                                         f"Ваш хряк весит {pig.weight}")
     else:
         await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
