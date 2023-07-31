@@ -60,7 +60,7 @@ async def grow(message: types.Message):
                 await modify_weight(user_id, message)
             else:
                 await message.reply(text=f"@{message.from_user.username}, обновление веса уже выполнялось сегодня. "
-                                         f"Ваш хряк весит {pig.weight} килограмм")
+                                         f"Ваш хряк весит {pig.weight} кг.")
     else:
         await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
