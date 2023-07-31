@@ -1,6 +1,7 @@
 import datetime
 import json
 import random
+from typing import List
 
 from user_class import Pig
 
@@ -35,7 +36,7 @@ async def modify_weight(user_id, message):
     if weight_change > 0:
 
         pig.weight += weight_change
-        message_texts = [
+        message_texts: list[str] = [
             f"@{message.from_user.username}, ваш хряк поел на {weight_change} кг. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, ваш хряк валялся весь день и потолстел на {weight_change} кг. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, ваш хряк потолстел на {weight_change} кг. Теперь он весит {pig.weight} кг.",
@@ -44,7 +45,7 @@ async def modify_weight(user_id, message):
             f"@{message.from_user.username}, ваш хряк поспал и стал больше на {weight_change} кг. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, вы накормили своего любимого хряка лучшим кормом, и тот потолстел на {weight_change} кг. Теперь он весит {pig.weight} кг."
         ]
-        message_text = random.choice(i for i in message_texts)
+        message_text = random.choice(message_texts)
     elif weight_change == 0:
         message_text = f"@{message.from_user.username}, ваш хряк не изменился в весе. Теперь он весит {pig.weight} кг."
     else:
@@ -57,7 +58,7 @@ async def modify_weight(user_id, message):
             f"@{message.from_user.username}, вашему хряку не посчастливилось встретиться с писькогрызом, и тот отъел {- weight_change} кг от вашего хряка. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, ваш хряк похудел на {- weight_change} кг при невыясненных обстоятельствах. Теперь он весит {pig.weight} кг."
         ]
-        message_text = random.choice(i for i in message_texts)
+        message_text = random.choice(message_texts)
         if pig.weight <= 15:
             pigs.pop(user_id)
             message_text = f"@{message.from_user.username}, ваш хряк умер от недоедания."
