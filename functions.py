@@ -53,10 +53,11 @@ async def modify_weight(user_id, message):
         message_texts = [
             f"@{message.from_user.username}, ваш хряк похудел на {- weight_change} кг. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, вашего хряка покусали собаки отъев {- weight_change} кг. Теперь он весит {pig.weight} кг.",
-            f"@{message.from_user.username}, ваш хряк плохо поел и похудел на {- weight_change} кг. Теперь он весит {pig.weight} кг.",
+            f"@{message.from_user.username}, ваш хряк долго не ел и похудел на {- weight_change} кг. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, вашему хряку отъели {- weight_change} кг. Вы предполагаете, что их съела наука. Теперь он весит {pig.weight} кг.",
             f"@{message.from_user.username}, вашему хряку не посчастливилось встретиться с писькогрызом, и тот отъел {- weight_change} кг от вашего хряка. Теперь он весит {pig.weight} кг.",
-            f"@{message.from_user.username}, ваш хряк похудел на {- weight_change} кг при невыясненных обстоятельствах. Теперь он весит {pig.weight} кг."
+            f"@{message.from_user.username}, ваш хряк похудел на {- weight_change} кг при невыясненных обстоятельствах. Теперь он весит {pig.weight} кг.",
+            f"@{message.from_user.username}, ваш хряк упал в лужу и выплакал {- weight_change} кг слёз. Теперь он весит {pig.weight} кг."
         ]
         message_text = random.choice(message_texts)
         if pig.weight <= 15:
