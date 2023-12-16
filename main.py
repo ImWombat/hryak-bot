@@ -20,7 +20,7 @@ async def enter_new_name_handler(message: types.Message, state: FSMContext):
 
     pig_name = message.text  # Получаем введенное новое имя хряка
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
-    pig.name = pig_name  # Изменяем имя хряка
+    pig.name = pig_name[:50]  # Изменяем имя хряка
 
     await state.finish()  # Завершаем состояние ожидания ввода нового имени
 
