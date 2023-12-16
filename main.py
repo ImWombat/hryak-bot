@@ -1,4 +1,4 @@
-from functions import pigs, save_pigs, load_pigs, modify_weight
+from functions import pigs, save_pigs, load_pigs, modify_weight, auto_shop
 from aiogram import executor
 
 import datetime
@@ -6,6 +6,7 @@ from user_class import PigRenameStates, Pig
 from aiogram.dispatcher import FSMContext
 from aiogram import types
 from aiogram import Bot, Dispatcher
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from config import TOKEN
 
@@ -18,7 +19,7 @@ dp = Dispatcher(bot, storage=storage)
 async def enter_new_name_handler(message: types.Message, state: FSMContext):
     user_id = message.from_id
 
-    pig_name = message.text  # Получаем введенное новое имя хряка
+    pig_name = message.text[:50]  # Получаем введенное новое имя хряка
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
     pig.name = pig_name  # Изменяем имя хряка
 
@@ -117,6 +118,34 @@ async def top_handler(message: types.Message):
     await message.reply(top_message)
 
 
+# @dp.message_handler(commands=["shop"])
+# async def shop(user_id, message):
+#     markup = ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+#     buttons = [
+#         KeyboardButton("Автосалон"),
+#         KeyboardButton("Риэлтерское агентство"),
+#         KeyboardButton("Кафе"),
+#         KeyboardButton("Остаться дома")
+#     ]
+#
+#     markup.add(*buttons)
+#
+#     message_text: str = f"@{message.from_user.username}, вы захотели закупиться. Вы можете пойти в автосалон, в риэлтерское агенство, или просто сходить в кафе." \
+#                         f" Также вы можете остаться дома"
+#
+#     await bot.send_message(user_id, message_text, reply_markup=markup)
+# shop_choices = {
+#         "Автосалон": auto_shop(user_id, message),
+#         "Риэлтерское агентство": "В риэлтерском агентстве вы можете купить недвижимость: квартиры, дома, землю и многое другое.",
+#         "Кафе": "В кафе вы можете заказать разнообразные блюда и напитки.",
+#         "Остаться дома": "Если вы остаетесь дома, вы можете заказать еду на доставку, сделать покупки онлайн и многое другое."
+#     }
+# @dp.message_handler(lambda message: message.text in shop_choices.keys())
+# async def handle_shop_choice(message):
+#
+#     choice = message.text
+#     response = shop_choices.get(choice)
+#     await bot.send_message(message.from_user.id, response)
 if __name__ == "__main__":
     load_pigs()  # Загрузка данных о хряках
     # Запуск бота

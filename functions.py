@@ -26,6 +26,21 @@ def load_pigs():
     except FileNotFoundError:
         print("Файл не найден")
 
+async def shop_func(user_id, message):
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    buttons = [
+        KeyboardButton("Автосалон"),
+        KeyboardButton("Риэлтерское агентство"),
+        KeyboardButton("Кафе"),
+        KeyboardButton("Остаться дома")
+    ]
+
+    markup.add(*buttons)
+
+    message_text: str = f"@{message.from_user.username}, вы захотели закупиться. Вы можете пойти в автосалон, в риэлтерское агенство, или просто сходить в кафе." \
+                        f" Также вы можете остаться дома"
+
+
 
 async def modify_weight(user_id, message):
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
@@ -63,8 +78,18 @@ async def modify_weight(user_id, message):
         if pig.weight <= 15:
             pigs.pop(user_id)
             message_text = f"@{message.from_user.username}, ваш хряк умер от недоедания."
+
     pig.last_updated = datetime.datetime.now().strftime("%Y-%m-%d")  # Обновляем дату последнего обновления
 
     save_pigs()  # Сохраняем хряков
 
     await message.reply(text=message_text)
+
+# auto_shop_choices = {
+#     "Автомобиль": "Цена: $20,000",
+#     "Мотоцикл": "Цена: $5,000",
+#     "Аксессуары": "Цены разные"
+# }
+#
+# async def auto_shop(user_id, message):
+
