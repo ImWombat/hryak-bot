@@ -13,6 +13,8 @@ bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
+MAX_NAME_LENGTH = 50
+
 
 @dp.message_handler(state=PigRenameStates.enter_new_name)  # Обработчик для ввода нового имени хряка
 async def enter_new_name_handler(message: types.Message, state: FSMContext):
@@ -113,7 +115,7 @@ async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
     top_message = "Топ 20 хряков по весу:\n\n"
     for index, pig in enumerate(sorted_pigs[:20], start=1):
-        top_message += f"{index}. {pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
+        top_message += f"{index}. {pig.name[:MAX_NAME_LENGTH] if pig.name else 'Без имени'} - {pig.weight} кг\n"
     await message.reply(top_message)
 
 
