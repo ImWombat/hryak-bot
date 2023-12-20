@@ -119,7 +119,7 @@ async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
     top_message = "Топ 20 хряков по весу:\n\n"
     for index, pig in enumerate(sorted_pigs[:20], start=1):
-        top_message += f"{index}. {process_name(pig.name) if pig.name else 'Без имени'} - {pig.weight} кг\n"
+        top_message += f"{index}. {'Я уебан с длинным ником, мой ID:' + str(message.from_id) if len(pig.name) > 50 else pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
     await message.reply(top_message)
 
 
