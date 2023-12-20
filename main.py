@@ -13,6 +13,12 @@ bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
+MAX_NAME_LENGTH = 50
+
+# Укорачиваем имена и избавляем их от лишних символов
+def process_name(name):
+    return name.replace('\n', " ")[:MAX_NAME_LENGTH]
+
 
 @dp.message_handler(state=PigRenameStates.enter_new_name)  # Обработчик для ввода нового имени хряка
 async def enter_new_name_handler(message: types.Message, state: FSMContext):
@@ -20,7 +26,7 @@ async def enter_new_name_handler(message: types.Message, state: FSMContext):
 
     pig_name = message.text  # Получаем введенное новое имя хряка
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
-    pig.name = pig_name[:50]  # Изменяем имя хряка
+    pig.name = process_name(pig_name)  # Изменяем имя хряка
 
     await state.finish()  # Завершаем состояние ожидания ввода нового имени
 
@@ -103,7 +109,7 @@ async def weight_handler(message: types.Message):
 
         with open(image_path, "rb") as photo:
             await message.reply_photo(photo=photo,
-                                      caption=f"Ваш {pig.name if pig.name else 'безымянный хряк'} весит {pig.weight} кг.")
+                                      caption=f"Ваш {process_name(pig.name) if pig.name else 'безымянный хряк'} весит {pig.weight} кг.")
     else:
         await message.reply("У вас нет хряка. Начните с команды /start.")
 
@@ -113,7 +119,7 @@ async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
     top_message = "Топ 20 хряков по весу:\n\n"
     for index, pig in enumerate(sorted_pigs[:20], start=1):
-        top_message += f"{index}. {pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
+        top_message += f"{index}. {'Я уебан с длинным ником, мой ID:' + str(message.from_id) if len(pig.name) > 50 else pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
     await message.reply(top_message)
 
 
