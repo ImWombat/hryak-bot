@@ -7,14 +7,12 @@ class Pig:
         self.name = name
         self.weight = weight
         self.last_updated = last_updated
-        self.chat_id = chat_id
 
     def to_dict(self):
         return {
             "name": self.name,
             "weight": self.weight,
             "last_updated": self.last_updated,
-            "chat_id": self.chat_id,
         }
 
     @classmethod
@@ -23,7 +21,6 @@ class Pig:
             name=data.get("name"),
             weight=data.get("weight"),
             last_updated=data.get("last_updated"),
-            chat_id=data.get("chat_id"),
         )
 
 class PigRenameStates(StatesGroup):

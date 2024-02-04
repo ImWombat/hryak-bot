@@ -1,4 +1,4 @@
-from functions import pigs, save_pigs, load_pigs, modify_weight
+from functions import pigs, save_pigs, load_pigs, modify_weight, restart_handler
 from aiogram import executor
 
 import datetime
@@ -24,7 +24,7 @@ def process_name(name):
 async def enter_new_name_handler(message: types.Message, state: FSMContext):
     user_id = message.from_id
 
-    pig_name = message.text  # Получаем введенное новое имя хряка
+    pig_name = message.text[:50]  # Получаем введенное новое имя хряка
     pig = pigs[user_id]  # Получаем хряка для данного пользователя
     pig.name = process_name(pig_name)  # Изменяем имя хряка
 
@@ -71,16 +71,16 @@ async def grow(message: types.Message):
         await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
 
-@dp.message_handler(commands=["start"])
+@dp.message_handler(commands=["restart"])
 async def start_handler(message: types.Message):
-    user_id = message.from_id  # Получаем идентификатор пользователя, отправившего команду
-    chat_id = message.chat.id  # Получаем идентификатор чата
+    user_id = message.from_id  # Получаем идентификатор чата
 
     if user_id in pigs:
-        await message.reply("У вас уже есть хряк.")
+        await message.reply("У вас уже есть хряк. ВЫ ТОЧНО ХОТИТЕ НАЧАТЬ СНАЧАЛА?!")
+        restart_handler()
+
     else:
-        pigs[user_id] = Pig(name=None, weight=100, chat_id=chat_id)  # Передаем идентификатор чата при создании хряка
-        await message.reply("Бот был успешно настроен.")
+        restart_handler()
 
     save_pigs()  # Сохраняем хряков
 
@@ -113,13 +113,18 @@ async def weight_handler(message: types.Message):
     else:
         await message.reply("У вас нет хряка. Начните с команды /start.")
 
+def replace_name(name, user_id):
+    if "\n" in name or len(name) > 50:
+        return 'Я уебан с длинным ником, мой ID:' + str(user_id)
+    else:
+        return name
 
 @dp.message_handler(commands=["top"])
 async def top_handler(message: types.Message):
     sorted_pigs = sorted(pigs.values(), key=lambda pig: pig.weight, reverse=True)
-    top_message = "Топ 20 хряков по весу:\n\n"
-    for index, pig in enumerate(sorted_pigs[:20], start=1):
-        top_message += f"{index}. {'Я уебан с длинным ником, мой ID:' + str(message.from_id) if len(pig.name) > 50 else pig.name if pig.name else 'Без имени'} - {pig.weight} кг\n"
+    top_message = "Топ 10 хряков по весу:\n\n"
+    for index, pig in enumerate(sorted_pigs[:10], start=1):
+        top_message += f"{index}. {replace_name(pig.name, message.from_id)} - {pig.weight} кг \n"
     await message.reply(top_message)
 
 
