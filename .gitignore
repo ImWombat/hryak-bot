@@ -1,4 +1,8 @@
 venv
 .idea
+__pycache__
 config.py
+.git
+.idea
+test_user_tgbot.service
 pigs_data.json
