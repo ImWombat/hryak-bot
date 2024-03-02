@@ -114,7 +114,8 @@ async def weight_handler(message: types.Message):
         await message.reply("У вас нет хряка. Начните с команды /start.")
 
 def replace_name(name, user_id):
-    if "\n" in name or len(name) > 50:
+    if '''
+    ''' in name or len(name) > 50:
         return 'Я уебан с длинным ником, мой ID:' + str(user_id)
     else:
         return name
