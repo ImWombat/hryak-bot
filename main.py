@@ -71,16 +71,16 @@ async def grow(message: types.Message):
         await message.reply(text=f"@{message.from_user.username}, у вас нет хряка. Начните с команды /start")
 
 
-@dp.message_handler(commands=["restart"])
+@dp.message_handler(commands=["start"])
 async def start_handler(message: types.Message):
     user_id = message.from_id  # Получаем идентификатор чата
 
     if user_id in pigs:
         await message.reply("У вас уже есть хряк. ВЫ ТОЧНО ХОТИТЕ НАЧАТЬ СНАЧАЛА?!")
-        restart_handler()
+        True if not "yes" and 'да' != message.from_id.lower() else await restart_handler()
 
     else:
-        restart_handler()
+        await restart_handler()
 
     save_pigs()  # Сохраняем хряков
 
