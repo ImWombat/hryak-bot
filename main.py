@@ -77,10 +77,10 @@ async def start_handler(message: types.Message):
 
     if user_id in pigs:
         await message.reply("У вас уже есть хряк. ВЫ ТОЧНО ХОТИТЕ НАЧАТЬ СНАЧАЛА?!")
-        True if not "yes" and 'да' != message.from_id.lower() else await restart_handler()
+        True if not "yes" and 'да' != message.from_id.lower() else await restart_handler(message)
 
     else:
-        await restart_handler()
+        await restart_handler(message)
 
     save_pigs()  # Сохраняем хряков
 
